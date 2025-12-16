@@ -2414,48 +2414,88 @@
             }
             
             local Items = Cfg.Items; do 
--- Tab buttons 
-    Items.Outline = Library:Create( "TextButton" , {
+-- Tab buttons - Modern Redesign
+    Items.TabContainer = Library:Create( "Frame" , {
         Parent = self.Items.TabButtonHolder;
         Size = dim2(0, 100, 0, 100);
+        Name = "\0";
+        BackgroundTransparency = 1;
+        BorderColor3 = rgb(0, 0, 0);
+        BorderSizePixel = 0;
+    });
+
+    Items.Outline = Library:Create( "TextButton" , {
+        Parent = Items.TabContainer;
+        Size = dim2(1, 0, 1, 0);
         Name = "\0";
         Active = false;
         BorderColor3 = rgb(0, 0, 0);
         Selectable = false;
         BorderSizePixel = 0;
-        BackgroundColor3 = themes.preset.outline
-    });	Library:Themify(Items.Outline, "outline", "BackgroundColor3")
-
-    Items.Inline = Library:Create( "Frame" , {
-        Parent = Items.Outline;
-        Name = "\0";
-        Position = dim2(0, 1, 0, 1);
-        BorderColor3 = rgb(0, 0, 0);
-        Size = dim2(1, -2, 1, -2);
-        BorderSizePixel = 0;
-        BackgroundColor3 = themes.preset.inline
-    }); Library:Themify(Items.Inline, "inline", "BackgroundColor3")
-
-    Items.Background = Library:Create( "Frame" , {
-        Parent = Items.Inline;
-        Name = "\0";
-        Position = dim2(0, 1, 0, 1);
-        BorderColor3 = rgb(0, 0, 0);
-        Size = dim2(1, -2, 1, -2);
-        BorderSizePixel = 0;
-        BackgroundColor3 = rgb(28, 28, 33)
+        BackgroundTransparency = 1;
+        BackgroundColor3 = themes.preset.background
     });
 
-    Items.AccentBar = Library:Create( "Frame" , {
-        Parent = Items.Background;
+    Items.HoverEffect = Library:Create( "Frame" , {
+        Parent = Items.Outline;
         Name = "\0";
-        Position = dim2(0, 0, 1, -2);
+        Size = dim2(1, 0, 1, 0);
         BorderColor3 = rgb(0, 0, 0);
-        Size = dim2(1, 0, 0, 2);
+        BorderSizePixel = 0;
+        BackgroundTransparency = 0.95;
+        BackgroundColor3 = themes.preset.accent;
+        ZIndex = 1;
+    }); Library:Themify(Items.HoverEffect, "accent", "BackgroundColor3")
+
+    Items.Background = Library:Create( "Frame" , {
+        Parent = Items.Outline;
+        Name = "\0";
+        Size = dim2(1, 0, 1, 0);
+        BorderColor3 = rgb(0, 0, 0);
         BorderSizePixel = 0;
         BackgroundTransparency = 1;
-        BackgroundColor3 = themes.preset.accent
-    });	Library:Themify(Items.AccentBar, "accent", "BackgroundColor3")
+        BackgroundColor3 = themes.preset.background;
+        ZIndex = 2;
+    }); Library:Themify(Items.Background, "background", "BackgroundColor3")
+
+    Items.AccentLine = Library:Create( "Frame" , {
+        Parent = Items.Background;
+        Name = "\0";
+        Position = dim2(0, 0, 1, 0);
+        AnchorPoint = vec2(0, 1);
+        BorderColor3 = rgb(0, 0, 0);
+        Size = dim2(1, 0, 0, 0);
+        BorderSizePixel = 0;
+        BackgroundColor3 = themes.preset.accent;
+        ZIndex = 3;
+    }); Library:Themify(Items.AccentLine, "accent", "BackgroundColor3")
+
+    Items.IconHolder = Library:Create( "Frame" , {
+        Parent = Items.Background;
+        Name = "\0";
+        Position = dim2(0.5, 0, 0, 8);
+        AnchorPoint = vec2(0.5, 0);
+        Size = dim2(0, 16, 0, 16);
+        BorderColor3 = rgb(0, 0, 0);
+        BorderSizePixel = 0;
+        BackgroundTransparency = 1;
+        ZIndex = 3;
+    });
+
+    Items.Icon = Library:Create( "TextLabel" , {
+        FontFace = Fonts[themes.preset.font];
+        Parent = Items.IconHolder;
+        TextColor3 = themes.preset.unselected;
+        Text = string.upper(string.sub(Cfg.Name, 1, 1));
+        Name = "\0";
+        Size = dim2(1, 0, 1, 0);
+        BorderSizePixel = 0;
+        BackgroundTransparency = 1;
+        BorderColor3 = rgb(0, 0, 0);
+        ZIndex = 3;
+        TextSize = 14;
+        BackgroundColor3 = rgb(255, 255, 255)
+    }); Library:Themify(Items.Icon, "unselected", "TextColor3")
 
     Items.Title = Library:Create( "TextLabel" , {
         FontFace = Fonts[themes.preset.font];
@@ -2465,26 +2505,27 @@
         Text = Cfg.Name;
         Name = "\0";
         AutomaticSize = Enum.AutomaticSize.XY;
-        AnchorPoint = vec2(0.5, 0.5);
+        AnchorPoint = vec2(0.5, 0);
         BorderSizePixel = 0;
         BackgroundTransparency = 1;
-        Position = dim2(0.5, 0, 0.5, 0);
+        Position = dim2(0.5, 0, 0, 28);
         BorderColor3 = rgb(0, 0, 0);
-        ZIndex = 2;
-        TextSize = 12;
+        ZIndex = 3;
+        TextSize = 11;
         BackgroundColor3 = rgb(255, 255, 255)
-    });
+    }); Library:Themify(Items.Title, "unselected", "TextColor3")
 
     Library:Create( "UIStroke" , {
         Parent = Items.Title;
+        Transparency = 0.7;
         LineJoinMode = Enum.LineJoinMode.Miter
     });
 
-                    Library:Create( "UIPadding" , {
-                        Parent = Items.Title;
-                        PaddingRight = dim(0, 5);
-                        PaddingLeft = dim(0, 7)
-                    });
+    Library:Create( "UIPadding" , {
+        Parent = Items.Title;
+        PaddingLeft = dim(0, 4);
+        PaddingRight = dim(0, 4)
+    });
                 -- 
 
                 -- Page Directory
@@ -2512,7 +2553,7 @@
                 --
             end 
 
-    function Cfg.OpenTab() 
+function Cfg.OpenTab() 
     local Tab = self.TabInfo
 
     if Tab == Cfg then 
@@ -2520,14 +2561,20 @@
     end 
 
     if Tab then
-        Tab.Items.Title.TextColor3 = themes.preset.unselected
-        Library:Tween(Tab.Items.AccentBar, {BackgroundTransparency = 1})
+        -- Deselect previous tab
+        Library:Tween(Tab.Items.Title, {TextColor3 = themes.preset.unselected})
+        Library:Tween(Tab.Items.Icon, {TextColor3 = themes.preset.unselected, TextSize = 14})
+        Library:Tween(Tab.Items.AccentLine, {Size = dim2(1, 0, 0, 0)})
+        Library:Tween(Tab.Items.Background, {BackgroundTransparency = 1})
         Tab.Tween(false)
     end
 
+    -- Select new tab
     Cfg.Tween(true)
-    Items.Title.TextColor3 = themes.preset.text_color
-    Library:Tween(Items.AccentBar, {BackgroundTransparency = 0})
+    Library:Tween(Items.Title, {TextColor3 = themes.preset.text_color})
+    Library:Tween(Items.Icon, {TextColor3 = themes.preset.accent, TextSize = 16})
+    Library:Tween(Items.AccentLine, {Size = dim2(1, 0, 0, 3)})
+    Library:Tween(Items.Background, {BackgroundTransparency = 0.97})
 
     self.TabInfo = Cfg
 end
